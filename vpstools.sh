@@ -104,7 +104,7 @@ function starttwo()
 
 function startthree()
 {
-	echo -e '———————————————————\n1.acmesh手动dns脚本\n0.返回上级菜单\n—————————————————————'
+	echo -e '———————————————————\n1.acmesh手动dns脚本\n2.开启root登录\n0.返回上级菜单\n—————————————————————'
 	read -p '请输入你的选择：' input
 	case $input in
 		1)
@@ -116,10 +116,18 @@ function startthree()
 		  	read -s -n1 -p '解析成功后按任意键继续'
 			~/.acme.sh/acme.sh  --renew --force  -d $domain \
   			--yes-I-know-dns-manual-mode-enough-go-ahead-please
-		  green 'acme.sh --info -d example.com 查看已安装证书信息' 
-		  	~/.acme.sh/acme.sh --info -d $domain ;;		  
+		  green 'acme.sh --info -d example.com 查看已安装证书信息'
+		  	~/.acme.sh/acme.sh --info -d $domain ;;
+		2)
+		  yellow '请输入root密码：\n'
+			sudo passwd
+			sudo sed -i 's/^.*PermitRootLogin.*/PermitRootLogin yes/g' /etc/ssh/sshd_config
+			sudo sed -i 's/^.*PasswordAuthentication.*/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+		  green '现在你可以尝试用root+密码登录了'
+			read -s -n1 -p '按任意键重启sshd服务'
+			service sshd restart  ;;
 		0)
-			startmenu		  
+			startmenu
 	esac
 }
 
