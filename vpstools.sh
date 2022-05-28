@@ -120,7 +120,7 @@ function startthree()
 		  	~/.acme.sh/acme.sh --info -d $domain ;;
 		2)
 		  yellow '请输入root密码：\n'
-			sudo passwd
+			sudo chpasswd root
 			sudo sed -i 's/^.*PermitRootLogin.*/PermitRootLogin yes/g' /etc/ssh/sshd_config
 			sudo sed -i 's/^.*PasswordAuthentication.*/PasswordAuthentication yes/g' /etc/ssh/sshd_config
 		  green '现在你可以尝试用root+密码登录了'
