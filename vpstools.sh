@@ -13,9 +13,15 @@ yellow() {
 	echo -e "\033[33m\033[01m$1\033[0m"
 }
 
+function frp()
+{
+        wget -O /root/frp.tar.gz https://github.com/fatedier/frp/releases/download/v0.43.0/frp_0.43.0_darwin_amd64.tar.gz
+        tar -zxvf /root/frp.tar.gz
+}
+
 function startone()
 {
-	echo -e '——————————————————\n1.docker一键安装（可选docker-compose）\n2.x-ui面板\n3.Txray（Linux系统xray客户端）\n4.acmesh\n0.返回上级菜单\n——————————————————'
+	echo -e '——————————————————\n1.docker一键安装（可选docker-compose）\n2.x-ui面板\n3.Txray（Linux系统xray客户端）\n4.acmesh\n5.frp\n0.返回上级菜单\n——————————————————'
 	read -p '请输入你的选择：' input
 	case $input in
 		1)
@@ -35,6 +41,8 @@ function startone()
 			curl  https://get.acme.sh | sh -s email=$email
 			alias acme.sh=~/.acme.sh/acme.sh
 			green 'acmesh已安装到~/.acme.sh文件夹下，自动ssl脚本请到常用脚本下运行' ;;
+		5)
+			frp ;;
 		0)
 			startmenu
 	esac
@@ -100,13 +108,6 @@ function starttwo()
 		   green '映射目录在/opt/caddy' ;;
 		0) startmenu
 	esac
-}
-
-
-function frp()
-{
-	wget https://github.com/fatedier/frp/releases/download/v0.43.0/frp_0.43.0_darwin_amd64.tar.gz
-
 }
 
 
