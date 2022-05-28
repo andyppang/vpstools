@@ -102,6 +102,14 @@ function starttwo()
 	esac
 }
 
+
+function frp()
+{
+	wget https://github.com/fatedier/frp/releases/download/v0.43.0/frp_0.43.0_darwin_amd64.tar.gz
+
+}
+
+
 function startthree()
 {
 	echo -e '———————————————————\n1.acmesh手动dns脚本\n2.开启root登录\n0.返回上级菜单\n—————————————————————'
