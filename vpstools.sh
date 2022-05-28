@@ -15,8 +15,39 @@ yellow() {
 
 function frp()
 {
-        wget -O /root/frp.tar.gz https://github.com/fatedier/frp/releases/download/v0.43.0/frp_0.43.0_darwin_amd64.tar.gz
-        tar -zxvf /root/frp.tar.gz
+        wget -O /root/frp.tar.gz https://github.com/fatedier/frp/releases/download/v0.43.0/frp_0.43.0_linux_amd64.tar.gz
+        tar -xzvf /root/frp.tar.gz
+	mv frp* /root/frp
+	rm /root/frp.tar.gz
+	read -p '请输入token：' token
+	echo token = $token >> /root/frp/frps.ini
+	read -p '请输入域名：' url
+	echo subdomain_host = $url >> /root/frp/frps.ini
+	cp /root/frp/frps /usr/bin/frps
+	mkdir /etc/frp
+	cp /root/frp/frps.ini /etc/frp/frps.ini
+	touch /etc/systemd/system/frps.service
+	cat > /etc/systemd/system/frps.service <<EOF
+[Unit]
+Description=Frp Server Service
+After=network.target
+
+[Service]
+Type=simple
+User=nobody
+Restart=on-failure
+RestartSec=5s
+ExecStart=/usr/bin/frps -c /etc/frp/frps.ini
+LimitNOFILE=1048576
+
+[Install]
+WantedBy=multi-user.target
+EOF
+	systemctl start frps
+	systemctl status frps
+	green '主程序在/root/frp，添加了/etc/systemd/system/frps.service'
+	green '设置文件在/etc/frp,系统命令在/usr/bin/下面'
+	yellow '如果出错可以尝试systemctl daemon-reload && systemctl start frps' 
 }
 
 function startone()
