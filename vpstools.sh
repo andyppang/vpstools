@@ -81,7 +81,7 @@ function startone()
 
 function starttwo()
 {
-	echo -e '———————————————————\n1.portainer\n2.aria2pro\n3.ariang\n4.cloudreve\n5.flare\n6.caddy\n0.返回上级菜单\n——————————————————'
+	echo -e '———————————————————\n1.portainer\n2.aria2pro\n3.ariang\n4.cloudreve\n5.flare\n6.caddy\n7.mariadb\n0.返回上级菜单\n——————————————————'
 	read -p '请输入你的选择：' input
 	case $input in
 		1) docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock --restart=always --name prtainer portainer/portainer;;
@@ -137,6 +137,14 @@ function starttwo()
 			-v /opt/caddy/Caddyfile:/etc/caddy/Caddyfile \
 			caddy
 		   green '映射目录在/opt/caddy' ;;
+		7) read -p '请输入root密码：' pass
+			docker run --name mariadbtest \
+			 -e MYSQL_ROOT_PASSWORD=$pass \
+			-p 3306:3306  \
+			-d docker.io/library/mariadb:10.5
+		   green '运行docker exec -it mariadb bash进入容器'
+		   green "运行docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mariadb查看容器ip"
+		   green '运行mysql -h x.x.x.x -u root -p从容器外部连接数据库' ;;
 		0) startmenu
 	esac
 }
