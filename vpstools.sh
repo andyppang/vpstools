@@ -141,7 +141,7 @@ function starttwo()
 			docker run --name mariadb \
 			 -e MYSQL_ROOT_PASSWORD=$pass \
 			-p 3306:3306  \
-			-d docker.io/library/mariadb:10.5
+			-d docker.io/library/mariadb:10.2
 		   green '运行docker exec -it mariadb bash进入容器'
 		   green "运行docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mariadb查看容器ip"
 		   green '运行mysql -h x.x.x.x -u root -p从容器外部连接数据库' ;;
