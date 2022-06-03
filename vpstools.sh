@@ -138,7 +138,7 @@ function starttwo()
 			caddy
 		   green '映射目录在/opt/caddy' ;;
 		7) read -p '请输入root密码：' pass
-			docker run --name mariadbtest \
+			docker run --name mariadb \
 			 -e MYSQL_ROOT_PASSWORD=$pass \
 			-p 3306:3306  \
 			-d docker.io/library/mariadb:10.5
