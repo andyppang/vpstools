@@ -138,10 +138,12 @@ function starttwo()
 			caddy
 		   green '映射目录在/opt/caddy' ;;
 		7) read -p '请输入root密码：' pass
-			docker run --name mariadb \
-			 -e MYSQL_ROOT_PASSWORD=$pass \
-			-p 3306:3306  \
-			-d docker.io/library/mariadb:10.2
+			docker run --detach \
+			--name mariadb \
+			--env MARIADB_USER=admin \
+			--env MARIADB_PASSWORD=$pass \
+			--env MARIADB_ROOT_PASSWORD=$pass \
+			mariadb:latest
 		   green '运行docker exec -it mariadb bash进入容器'
 		   green "运行docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mariadb查看容器ip"
 		   green '运行mysql -h x.x.x.x -u root -p从容器外部连接数据库' ;;
