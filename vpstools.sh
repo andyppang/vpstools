@@ -137,13 +137,17 @@ function starttwo()
 			-v /opt/caddy/Caddyfile:/etc/caddy/Caddyfile \
 			caddy
 		   green '映射目录在/opt/caddy' ;;
-		7) read -p '请输入root密码：' pass
+		7) mkdir /opt/mariadb
+		   docker network create mariadb-network 
+		   read -p '请输入root密码：' pass
 			docker run --detach \
 			--name mariadb \
-			--env MARIADB_USER=admin \
-			--env MARIADB_PASSWORD=$pass \
+			--network mariadb-network \
+			-v /opt/mariadb:/var/lib/mysql \
 			--env MARIADB_ROOT_PASSWORD=$pass \
 			mariadb:latest
+		   green '映射关系：/opt/mariadb:/var/lib/mysql'
+		   green '为了方便后续建站等需求，建立了mariadb-network'
 		   green '运行docker exec -it mariadb bash进入容器'
 		   green "运行docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mariadb查看容器ip"
 		   green '运行mysql -h x.x.x.x -u root -p从容器外部连接数据库' ;;
