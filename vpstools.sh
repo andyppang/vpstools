@@ -158,7 +158,7 @@ function starttwo()
 
 function startthree()
 {
-	echo -e '———————————————————\n1.acmesh手动dns脚本\n2.开启root登录\n0.返回上级菜单\n—————————————————————'
+	echo -e '———————————————————\n1.acmesh手动dns脚本\n2.开启root登录\n3.安装wireguard-go\n4.开启双栈warp脚本\n0.返回上级菜单\n—————————————————————'
 	read -p '请输入你的选择：' input
 	case $input in
 		1)
@@ -181,6 +181,14 @@ function startthree()
 		  green '现在你可以尝试用root+密码登录了'
 			read -s -n1 -p '按任意键重启sshd服务'
 			service sshd restart  ;;
+		3)
+		  yellow '本脚本安装vps各种架构都通用的wireguard-go'
+		  yellow '如果要安装内核请google p3terx wireguard'
+		  yellow '理论网络性能：内核集成 ≥ 内核模块 ＞ wireguard-go'
+			read -s -n1 -p '按任意键继续'
+			curl -fsSL git.io/wireguard-go.sh | sudo bash ;;
+		4)
+			wget -N https://raw.githubusercontent.com/fscarmen/warp/main/warp-go.sh	;;
 		0)
 			startmenu
 	esac
