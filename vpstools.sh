@@ -158,7 +158,7 @@ function starttwo()
 
 function startthree()
 {
-	echo -e '———————————————————\n1.acmesh手动dns脚本\n2.开启root登录\n3.安装wireguard-go\n4.开启双栈warp脚本\n0.返回上级菜单\n—————————————————————'
+	echo -e '———————————————————\n1.acmesh手动dns脚本\n2.开启root登录\n3.安装wireguard-go\n4.开启双栈warp脚本\n5.ls命令添加颜色\n0.返回上级菜单\n—————————————————————'
 	read -p '请输入你的选择：' input
 	case $input in
 		1)
@@ -189,6 +189,16 @@ function startthree()
 			curl -fsSL git.io/wireguard-go.sh | sudo bash ;;
 		4)
 			wget -N https://raw.githubusercontent.com/fscarmen/warp/main/warp-go.sh	;;
+		5)
+		  	# Check if the alias for ls already exists
+			if ! grep -q "alias ls='ls --color=auto'" ~/.bashrc; then
+			# Add the alias to ~/.bashrc
+			echo "alias ls='ls --color=auto'" >> ~/.bashrc
+			# Reload the ~/.bashrc file
+			source ~/.bashrc 
+			echo "The alias for ls has been added." >&2
+			else echo "The alias for ls already exists." >&2
+			fi ;;
 		0)
 			startmenu
 	esac
