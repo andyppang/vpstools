@@ -158,7 +158,7 @@ function starttwo()
 
 function startthree()
 {
-	echo -e '———————————————————\n1.acmesh手动dns脚本\n2.开启root登录\n3.安装wireguard-go\n4.开启双栈warp脚本\n5.ls命令添加颜色\n0.返回上级菜单\n—————————————————————'
+	echo -e '———————————————————\n1.acmesh手动dns脚本\n2.开启root登录\n3.安装wireguard-go\n4.开启双栈warp脚本\n5.ls命令添加颜色\n6.添加bannedip任务\n0.返回上级菜单\n—————————————————————'
 	read -p '请输入你的选择：' input
 	case $input in
 		1)
@@ -199,6 +199,51 @@ function startthree()
 			echo "The alias for ls has been added." >&2
 			else echo "The alias for ls already exists." >&2
 			fi ;;
+		6)	
+		  yellow '本脚本将尝试恶意连接vps的ip抓取出来拒绝连接，具体在/root目录下添加bannedip.py文件，并添加定时任务'
+			# 定义要使用的文件路径和名称
+			LOG_FILE="/var/log/auth.log"
+			DENY_FILE="/etc/hosts.deny"
+			SCRIPT_FILE="/root/bannedip.py"
+			
+			# 编写Python脚本文件
+			cat <<EOF > $SCRIPT_FILE
+			import os
+			
+			# 读取hosts.deny文件中已经拒绝的IP地址
+			with open("$DENY_FILE") as f:
+			    deny = f.read().split("\n")
+			
+			# 读取auth.log文件中的日志
+			with open("$LOG_FILE") as f:
+			    log = f.read().split("\n")
+			
+			# 存储要添加到hosts.deny文件中的IP地址
+			ipset = set()
+			
+			# 从auth.log文件中提取所有失败的登录尝试的IP地址
+			for each in log:
+			    if 'Failed password' in each:
+			        ip = each.split(' from ')[1].split(' port ')[0]
+			        writein = 'ALL: ' + ip
+			        ipset.add(writein)
+			
+			# 将新的IP地址添加到hosts.deny文件中
+			with open('$DENY_FILE', 'a') as f:
+			    for each in ipset:
+			        if each not in deny:
+			            print("Adding " + each + " to $DENY_FILE")
+			            f.write(each + '\n')
+			EOF
+			
+			# 赋予Python脚本文件可执行权限
+			chmod +x $SCRIPT_FILE
+			
+			# 添加crontab任务
+			(crontab -l 2>/dev/null; echo "*/5 * * * * /usr/bin/python3 $SCRIPT_FILE >> /var/log/bannedip.log 2>&1") | crontab -
+			
+			
+			echo "已添加bannedip任务到crontab中。";;
 		0)
 			startmenu
 	esac
