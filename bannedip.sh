@@ -39,7 +39,7 @@ EOF
 chmod +x $SCRIPT_FILE
 
 # 添加crontab任务
-(crontab -l 2>/dev/null; echo "*/5 * * * * /usr/bin/python $SCRIPT_FILE >> /var/log/bannedip.log 2>&1") | crontab -
+(crontab -l 2>/dev/null; echo "*/5 * * * * /usr/bin/python3 $SCRIPT_FILE >> /var/log/bannedip.log 2>&1") | crontab -
 
 
 echo "已添加bannedip任务到crontab中。"
