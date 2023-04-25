@@ -81,7 +81,7 @@ function startone()
 
 function starttwo()
 {
-	echo -e '———————————————————\n1.portainer\n2.aria2pro\n3.ariang\n4.cloudreve\n5.flare\n6.caddy\n7.mariadb\n0.返回上级菜单\n——————————————————'
+	echo -e '———————————————————\n1.portainer\n2.aria2pro\n3.ariang\n4.cloudreve\n5.flare\n6.caddy\n7.mariadb\n8.plex\n0.返回上级菜单\n——————————————————'
 	read -p '请输入你的选择：' input
 	case $input in
 		1) docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock --restart=always --name prtainer portainer/portainer;;
@@ -151,6 +151,23 @@ function starttwo()
 		   green '运行docker exec -it mariadb bash进入容器'
 		   green "运行docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mariadb查看容器ip"
 		   green '运行mysql -h x.x.x.x -u root -p从容器外部连接数据库' ;;
+		8)
+		   yellow '首先请到https://plex.com/claim 准备好claimid备用'
+		   read -p '请粘贴claim id：' claimid
+		   read -p '请输入影视目录的绝对路径：' moviepath
+			   docker run -d \
+			   --name plex \
+			   --network host \
+			   -e PUID=1000 \
+			   -e PGID=1000 \
+			   -e VERSION=docker \
+			   -e PLEX_CLAIM=$claimid \
+			   -v /opt/plex:/config \
+			   -v /opt/aria2/aria2-downloads:/tv \
+			   -v $moviepath:/movies \
+			   --restart unless-stopped \
+			   lscr.io/linuxserver/plex:latest
+		   green '磁盘映射在/opt/plex' ;;
 		0) startmenu
 	esac
 }
