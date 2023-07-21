@@ -52,7 +52,7 @@ EOF
 
 function startone()
 {
-	echo -e '——————————————————\n1.docker一键安装（可选docker-compose）\n2.x-ui面板\n3.Txray（Linux系统xray客户端）\n4.acmesh\n5.frp\n0.返回上级菜单\n——————————————————'
+	echo -e '——————————————————\n1.docker一键安装（可选docker-compose）\n2.x-ui面板\n3.Txray（Linux系统xray客户端）\n4.acmesh\n5.frp\n6.hysteria\n0.返回上级菜单\n——————————————————'
 	read -p '请输入你的选择：' input
 	case $input in
 		1)
@@ -74,6 +74,10 @@ function startone()
 			green 'acmesh已安装到~/.acme.sh文件夹下，自动ssl脚本请到常用脚本下运行' ;;
 		5)
 			frp ;;
+		6)	
+			yellow '选择自签证书的话，请准备好一个域名'
+			read -s -n1 -p '按任意键继续'
+			bash <(curl -fsSL https://git.io/hysteria.sh) ;;
 		0)
 			startmenu
 	esac
@@ -117,7 +121,9 @@ function starttwo()
 			littleplus/cloudreve-3.0.0-rc-1:sqlite
 		   green '映射目录在/opt/cloudreve'
 		   green '映射端口8081:8080'
-		   green '访问ip:8081' ;;
+		   green '访问ip:8081' 
+		   green '默认登录邮箱为admin@cloudreve.org'
+		   green '默认密码请用命令查看 docker logs -f cloudreve' ;;
 		5)
 			docker run -d \
 			--name flare \
